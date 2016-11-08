@@ -17,7 +17,10 @@ public class GLRenderer implements GLSurfaceView.Renderer {
     private Activity activity;
     private Rect rect;
     private float[] resolution = new float[2];
-    long startTime;
+    private long startTime;
+    private Camera camera;
+
+    private boolean configured = false;
 
     public GLRenderer(GLSurfaceView view, Activity activity){
         this.view = view;
@@ -26,7 +29,11 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        rect = new Rect(view);
+        int cameraTexture = GLUtil.createTexture();
+        camera = new Camera(activity, cameraTexture);
+        camera.open();
+
+        rect = new Rect(view, cameraTexture, camera);
         startTime = SystemClock.uptimeMillis();
     }
 
@@ -35,11 +42,23 @@ public class GLRenderer implements GLSurfaceView.Renderer {
         resolution[0] = width;
         resolution[1] = height;
         GLES20.glViewport(0, 0, width, height);
+        configured = false;
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        if (!configured) {
+            if (configured = camera.getInitialized()) {
+                camera.setCameraRotation();
+            } else {
+                return;
+            }
+        }
+
+        camera.updateTexture();
+
         long time = SystemClock.uptimeMillis() - startTime;
         rect.draw(resolution, 0);
     }
+
 }

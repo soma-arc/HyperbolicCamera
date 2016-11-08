@@ -1,7 +1,10 @@
+#extension GL_OES_EGL_image_external : require
 precision mediump float;
 
 uniform float u_iGlobalTime;
 uniform vec2 u_iResolution;
+uniform samplerExternalOES u_texture;
+uniform int u_cameraRotation;
 
 vec2 rand2n(vec2 co, float sampleIndex) {
     vec2 seed = co * (sampleIndex + 1.0);

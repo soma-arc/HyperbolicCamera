@@ -1,7 +1,9 @@
 package net.soma_arc.hyperboliccamera;
 
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -33,7 +35,12 @@ public class Rect {
 
     private ArrayList<Integer> uniLocation = new ArrayList<>();
 
-    public Rect(GLSurfaceView context){
+    private int cameraTexureId;
+    private Camera camera;
+
+    public Rect(GLSurfaceView context, int cameraTextureId, Camera camera){
+        this.cameraTexureId = cameraTextureId;
+        this.camera = camera;
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (# of coordinate values * 4 bytes per float)
                 SQUARE_COORDS.length * 4);
@@ -52,7 +59,7 @@ public class Rect {
         drawListBuffer.position(0);
 
         int vertexShader = GLUtil.loadShader(context, GLES20.GL_VERTEX_SHADER, R.raw.rect_vert);
-        int fragmentShader = GLUtil.loadShader(context, GLES20.GL_FRAGMENT_SHADER,  R.raw.rect_frag);
+        int fragmentShader = GLUtil.loadShader(context, GLES20.GL_FRAGMENT_SHADER,  R.raw.render_texture_frag);
         program = GLES20.glCreateProgram();
         GLES20.glAttachShader(program, vertexShader);
         GLES20.glAttachShader(program, fragmentShader);
@@ -60,6 +67,8 @@ public class Rect {
 
         uniLocation.add(GLES20.glGetUniformLocation(program, "u_iResolution"));
         uniLocation.add(GLES20.glGetUniformLocation(program, "u_iGlobalTime"));
+        uniLocation.add(GLES20.glGetUniformLocation(program, "u_texture"));
+        uniLocation.add(GLES20.glGetUniformLocation(program, "u_cameraRotation"));
 
         attribLocation = GLES20.glGetAttribLocation(program, "a_vertex");
         GLES20.glEnableVertexAttribArray(attribLocation);
@@ -73,7 +82,11 @@ public class Rect {
         int index = 0;
         GLES20.glUniform2fv(uniLocation.get(index++), 1, resolution, 0);
         GLES20.glUniform1f(uniLocation.get(index++), time);
-
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, cameraTexureId);
+        GLUtil.checkGlError("bindCameraTexture");
+        GLES20.glUniform1i(uniLocation.get(index++), 0);
+        GLES20.glUniform1i(uniLocation.get(index++), camera.getRotation());
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, SQUARE_DRAW_ORDER.length,
                 GLES20.GL_UNSIGNED_SHORT, drawListBuffer);

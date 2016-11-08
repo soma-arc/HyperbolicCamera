@@ -1,5 +1,6 @@
 package net.soma_arc.hyperboliccamera;
 
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
@@ -8,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by soma on 2016/11/07.
@@ -67,5 +70,27 @@ public final class GLUtil {
             return -1;
         }
         return shader;
+    }
+
+    public static int createTexture(){
+        int[] textures = new int[1];
+        GLES20.glGenTextures(1, textures, 0);
+        int texture = textures[0];
+
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture);
+        GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+        GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture);
+
+        return texture;
+    }
+
+    public static void checkGlError(String op) {
+        int error = GLES20.glGetError();
+        if (error != GLES20.GL_NO_ERROR) {
+            throw new RuntimeException(op + ": glError " + error);
+        }
     }
 }
