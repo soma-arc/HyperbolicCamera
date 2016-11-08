@@ -59,7 +59,7 @@ public class Rect {
         drawListBuffer.position(0);
 
         int vertexShader = GLUtil.loadShader(context, GLES20.GL_VERTEX_SHADER, R.raw.rect_vert);
-        int fragmentShader = GLUtil.loadShader(context, GLES20.GL_FRAGMENT_SHADER,  R.raw.render_texture_frag);
+        int fragmentShader = GLUtil.loadShader(context, GLES20.GL_FRAGMENT_SHADER,  R.raw.hyperbolic_tessellator_frag);
         program = GLES20.glCreateProgram();
         GLES20.glAttachShader(program, vertexShader);
         GLES20.glAttachShader(program, fragmentShader);
