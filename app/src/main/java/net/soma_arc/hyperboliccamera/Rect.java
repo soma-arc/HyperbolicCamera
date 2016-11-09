@@ -69,6 +69,10 @@ public class Rect {
         uniLocation.add(GLES20.glGetUniformLocation(program, "u_iGlobalTime"));
         uniLocation.add(GLES20.glGetUniformLocation(program, "u_texture"));
         uniLocation.add(GLES20.glGetUniformLocation(program, "u_cameraRotation"));
+        uniLocation.add(GLES20.glGetUniformLocation(program, "u_tilt"));
+        uniLocation.add(GLES20.glGetUniformLocation(program, "u_translate"));
+        uniLocation.add(GLES20.glGetUniformLocation(program, "u_scale"));
+        uniLocation.add(GLES20.glGetUniformLocation(program, "u_mixFactor"));
 
         attribLocation = GLES20.glGetAttribLocation(program, "a_vertex");
         GLES20.glEnableVertexAttribArray(attribLocation);
@@ -77,6 +81,11 @@ public class Rect {
 
         GLES20.glUseProgram(program);
     }
+
+    private float[] tilt  =  {0.7f, 0.f};
+    private float[] translate =  {0.f, 0.f};
+    private float scale = 7.f;
+    private float mixFactor = 0.f;
 
     public void draw(float[] resolution, int time){
         int index = 0;
@@ -87,6 +96,11 @@ public class Rect {
         GLUtil.checkGlError("bindCameraTexture");
         GLES20.glUniform1i(uniLocation.get(index++), 0);
         GLES20.glUniform1i(uniLocation.get(index++), camera.getRotation());
+        GLES20.glUniform2fv(uniLocation.get(index++), 1, tilt, 0);
+        GLES20.glUniform2fv(uniLocation.get(index++), 1, translate, 0);
+        GLES20.glUniform1f(uniLocation.get(index++), scale);
+        GLES20.glUniform1f(uniLocation.get(index++), mixFactor);
+
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, SQUARE_DRAW_ORDER.length,
                 GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
