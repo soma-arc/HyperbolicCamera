@@ -78,6 +78,14 @@ public class GLRenderer implements GLSurfaceView.Renderer {
         rect.draw(resolution, 0);
     }
 
+    public void scaleBegin(){
+        rect.scaleBegin();
+    }
+
+    public void handleScaling(float scaleFactor){
+        rect.tweakScale(scaleFactor);
+    }
+
     public static Bitmap capture(final int w, final int h){
         final int pixels[] = new int[w * h];
         final int result[] = new int[w * h];

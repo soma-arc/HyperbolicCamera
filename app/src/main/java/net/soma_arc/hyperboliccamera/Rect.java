@@ -105,4 +105,13 @@ public class Rect {
                 GLES20.GL_TRIANGLES, SQUARE_DRAW_ORDER.length,
                 GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
     }
+
+    float prevScale = scale;
+    public void scaleBegin(){
+        prevScale = scale;
+    }
+
+    public void tweakScale(float scaleFactor){
+        scale = prevScale / scaleFactor;
+    }
 }
