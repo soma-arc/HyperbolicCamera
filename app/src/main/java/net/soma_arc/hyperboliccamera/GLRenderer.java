@@ -13,6 +13,7 @@ import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -76,6 +77,14 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 
         long time = SystemClock.uptimeMillis() - startTime;
         rect.draw(resolution, 0);
+    }
+
+    public void handleScroll(MotionEvent e1, MotionEvent e2, float dx, float dy){
+        rect.scroll(e1.getX(), e1.getY(), e2.getX(), e2.getY());
+    }
+
+    public void onDown(MotionEvent e){
+        rect.onDown(e.getX(), e.getY());
     }
 
     public void scaleBegin(){

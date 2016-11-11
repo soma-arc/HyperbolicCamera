@@ -86,8 +86,12 @@ public class Rect {
     private float[] translate =  {0.f, 0.f};
     private float scale = 7.f;
     private float mixFactor = 0.f;
+    private float[] resolution;
+    private float canvasRatio;
 
     public void draw(float[] resolution, int time){
+        this.resolution = resolution;
+        canvasRatio = resolution[0] / resolution[1] / 2.f;
         int index = 0;
         GLES20.glUniform2fv(uniLocation.get(index++), 1, resolution, 0);
         GLES20.glUniform1f(uniLocation.get(index++), time);
@@ -104,6 +108,26 @@ public class Rect {
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, SQUARE_DRAW_ORDER.length,
                 GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+    }
+
+    float[] prevTranslate = new float[2];
+    public void onDown(float x, float y){
+        prevTranslate = translate.clone();
+    }
+
+    private float[] calcCoord(float x, float y){
+        float coord[] = {
+                scale * (x / resolution[1] - canvasRatio),
+                scale * (y / resolution[1] - 0.5f)
+        };
+        return coord;
+    }
+
+    public void scroll(float px, float py, float currentX, float currentY){
+        float[] prev = calcCoord(px, py);
+        float[] current = calcCoord(currentX, currentY);
+        translate[0] = prevTranslate[0] - (current[0] - prev[0]);
+        translate[1] = prevTranslate[1] + current[1] - prev[1];
     }
 
     float prevScale = scale;

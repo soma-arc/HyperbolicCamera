@@ -55,6 +55,12 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     private final GestureDetector.SimpleOnGestureListener onGestureListener = new GestureDetector.SimpleOnGestureListener(){
         @Override
+        public boolean onDown(MotionEvent e){
+            renderer.onDown(e);
+            return true;
+        }
+
+        @Override
         public boolean onDoubleTap(MotionEvent e){
             Toast.makeText(getContext(), "Saving...", Toast.LENGTH_LONG).show();
 
@@ -65,6 +71,12 @@ public class MyGLSurfaceView extends GLSurfaceView {
                 }
             });
             return super.onDoubleTap(e);
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy){
+            renderer.handleScroll(e1, e2, dx, dy);
+            return super.onScroll(e1, e2, dx, dy);
         }
     };
 
