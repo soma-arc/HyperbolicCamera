@@ -133,9 +133,10 @@ public class GLRenderer implements GLSurfaceView.Renderer {
             }
         }else{
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
+                return;
             } else {
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                savePNG();
             }
         }
 

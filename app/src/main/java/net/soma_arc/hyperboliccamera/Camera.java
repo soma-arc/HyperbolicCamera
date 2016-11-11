@@ -115,9 +115,10 @@ public class Camera {
             }
         }else{
             if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, android.Manifest.permission.CAMERA)) {
-
+                return;
             } else {
                 ActivityCompat.requestPermissions(mActivity, new String[]{android.Manifest.permission.CAMERA}, 0);
+                open();
             }
         }
     }
