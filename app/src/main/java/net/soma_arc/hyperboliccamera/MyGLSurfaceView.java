@@ -2,8 +2,11 @@ package net.soma_arc.hyperboliccamera;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -13,12 +16,22 @@ import android.widget.Toast;
  */
 
 public class MyGLSurfaceView extends GLSurfaceView {
-    private  final GLRenderer renderer;
+    private GLRenderer renderer;
     private GestureDetector gestureDetector;
 
     public MyGLSurfaceView(Context context){
         super(context);
+        if(!isInEditMode())
+            init(context);
+    }
 
+    public MyGLSurfaceView(Context context, AttributeSet attrs){
+        super(context, attrs);
+        if(!isInEditMode())
+            init(context);
+    }
+
+    private void init(Context context){
         setEGLContextClientVersion(2);
 
         renderer = new GLRenderer(this, (Activity) context);

@@ -6,4 +6,8 @@
     android:layout_height="match_parent"
     tools:context="net.soma_arc.hyperboliccamera.MainActivity">
 
+    <net.soma_arc.hyperboliccamera.MyGLSurfaceView
+        android:id="@+id/GLsurface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>
