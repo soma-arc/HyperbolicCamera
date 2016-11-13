@@ -39,6 +39,7 @@ public class GLRenderer implements GLSurfaceView.Renderer {
     private Camera camera;
 
     private boolean configured = false;
+    private boolean isScaling = false;
 
     public GLRenderer(GLSurfaceView view, Activity activity){
         this.view = view;
@@ -80,7 +81,8 @@ public class GLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void handleScroll(MotionEvent e1, MotionEvent e2, float dx, float dy){
-        rect.scroll(e1.getX(), e1.getY(), e2.getX(), e2.getY());
+        if(!isScaling)
+            rect.scroll(e1.getX(), e1.getY(), e2.getX(), e2.getY());
     }
 
     public void onDown(MotionEvent e){
@@ -89,10 +91,15 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 
     public void scaleBegin(){
         rect.scaleBegin();
+        isScaling = true;
     }
 
     public void handleScaling(float scaleFactor){
         rect.tweakScale(scaleFactor);
+    }
+
+    public void scaleEnd(){
+        isScaling = false;
     }
 
     public static Bitmap capture(final int w, final int h){

@@ -91,6 +91,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             renderer.handleScaling(detector.getScaleFactor());
+            renderer.scaleEnd();
             super.onScaleEnd(detector);
         }
 
